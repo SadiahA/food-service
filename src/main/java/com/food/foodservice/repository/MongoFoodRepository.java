@@ -77,23 +77,7 @@ public class MongoFoodRepository implements FoodRepository {
         food.setName(document.get("name").toString());
 
         // categories
-        List<String> categories = new ArrayList<>();
-        String allCategories = document.get("categories").toString();
-
-        List<String> categories1 = (List<String>) document.get("categories");
-        String[] splitCategories = allCategories.split(",");
-
-        int splitCategoriesArrayLength = splitCategories.length;
-        int lengthOfLastCategory = splitCategories[2].trim().length();
-
-        String firstCategory = splitCategories[0].trim().substring(1, splitCategories[0].length());
-        String lastCategory = splitCategories[splitCategoriesArrayLength-1].substring(0, lengthOfLastCategory);
-
-        categories.add(firstCategory);
-        for(int i=1; i<splitCategoriesArrayLength-1; i++) {
-            categories.add(splitCategories[i]);
-        }
-        categories.add(lastCategory);
+        List<String> categories = (List<String>) document.get("categories");
         food.setCategories(categories);
 
         // calories
