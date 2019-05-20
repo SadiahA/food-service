@@ -8,7 +8,7 @@ public class Food {
     private final transient String id = UUID.randomUUID().toString();
     private String name;
     private List<String> categories;
-    private long calories;
+    private double calories;
     private double cost;
 
     public Food() {
@@ -41,11 +41,11 @@ public class Food {
         this.categories = categories;
     }
 
-    public long getCalories() {
+    public double getCalories() {
         return calories;
     }
 
-    public void setCalories(long calories) {
+    public void setCalories(double calories) {
         this.calories = calories;
     }
 

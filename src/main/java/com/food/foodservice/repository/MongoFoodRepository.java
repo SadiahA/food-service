@@ -97,8 +97,8 @@ public class MongoFoodRepository implements FoodRepository {
         food.setCategories(categories);
 
         // calories
-        String calories = (String) document.get("calories");
-        food.setCalories(Math.round(Double.parseDouble(calories)));
+        Double calories = (Double) document.get("calories");
+        food.setCalories(calories);
 
         // cost
         String cost = document.get("cost").toString();
