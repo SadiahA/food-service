@@ -5,20 +5,13 @@ import java.util.UUID;
 
 public class Food {
 
-    private final transient String id = UUID.randomUUID().toString();
+    private String id;
     private String name;
     private List<String> categories;
     private double calories;
     private double cost;
 
     public Food() {
-    }
-
-    public Food(String name, List<String> categories, long calories, double cost) {
-        this.name = name;
-        this.categories = categories;
-        this.calories = calories;
-        this.cost = cost;
     }
 
     public String getId() {
@@ -55,5 +48,9 @@ public class Food {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
