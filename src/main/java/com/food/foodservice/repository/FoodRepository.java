@@ -6,7 +6,7 @@ import com.food.foodservice.model.Food;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FoodRepository<T> {
+public interface FoodRepository {
     Food getFood(String id);
 
     void addFood(String id, Food foodItem);
