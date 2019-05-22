@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface FoodRepository {
     Food getFood(String id);
 
-    void addFood(String id, Food foodItem);
+    String addFood(Food foodItem);
 
     List<Food> getAllFoods();
 

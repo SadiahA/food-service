@@ -22,9 +22,8 @@ public class FoodService {
     }
 
     public String addFood(@Valid Food food) {
-        String uuid = food.getId();
-        foodRepository.addFood(uuid, food);
-        return uuid;
+        String foodId = foodRepository.addFood(food);
+        return foodId;
     }
 
 }

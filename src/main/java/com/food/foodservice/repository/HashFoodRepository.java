@@ -17,8 +17,9 @@ public class HashFoodRepository implements FoodRepository {
     }
 
     @Override
-    public void addFood(String id, Food foodItem) {
-        foods.put(id, foodItem);
+    public String addFood(Food foodItem) {
+//        foods.put(foodItem);
+        return "";
     }
 
     @Override

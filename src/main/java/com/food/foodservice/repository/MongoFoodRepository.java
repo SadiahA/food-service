@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.food.foodservice.model.Food;
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.BSON;
 import org.bson.Document;
-import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +21,7 @@ public class MongoFoodRepository implements FoodRepository {
 
     private MongoClient mongoClient;
     private MongoDatabase database;
+    private static final Gson GSON = new Gson();
 
     public MongoFoodRepository() {
         mongoClient = new MongoClient("localhost", 27017);
@@ -34,7 +35,7 @@ public class MongoFoodRepository implements FoodRepository {
             MongoCollection<Document> foodItems = database.getCollection("foodItems");
 
             BasicDBObject query = new BasicDBObject(); //represents query in search criteria
-            query.put("id", new BasicDBObject("$eq", id));
+            query.put("_id", new ObjectId(id));
 
             FindIterable<Document> cursor = foodItems.find(query);
 
@@ -50,11 +51,18 @@ public class MongoFoodRepository implements FoodRepository {
     }
 
     @Override
-    public void addFood(String id, Food foodItem) {
-        Document document = new Document();
-        document.put(id, foodItem);
+    public String addFood(Food foodItem) {
         MongoCollection<Document> foodItems = database.getCollection("foodItems");
+
+        Document document = new Document();
+        document.append("name", foodItem.getName());
+        document.append("categories", foodItem.getCategories());
+        document.append("calories", foodItem.getCalories());
+        document.append("cost", foodItem.getCost());
+
         foodItems.insertOne(document);
+
+        return document.getObjectId("_id").toString();
     }
 
     @Override
@@ -72,6 +80,10 @@ public class MongoFoodRepository implements FoodRepository {
 
     private Food convertDocumentToFood(Document document) {
         Food food = new Food();
+
+        // id
+        ObjectId id = document.getObjectId("_id");
+        food.setId(id.toString());
 
         // name
         food.setName(document.get("name").toString());
@@ -111,6 +123,7 @@ public class MongoFoodRepository implements FoodRepository {
 
     @Override
     public void removeFood(String id) {
+
 //        Bson bson = database.getCollection(
 //        database.getCollection("foodItems").deleteOne(bson)
     }
