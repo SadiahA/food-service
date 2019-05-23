@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +24,8 @@ public class FoodController {
 
     @GetMapping("/food/{foodId}")
     public ResponseEntity<Food> getFoodWithId(@PathVariable(name = "foodId") final String foodId) {
-        final Food food = foodService.retrieveFood(foodId);
-        return Optional.ofNullable(food)
-                .map(ResponseEntity::ok)
+        final Optional<Food> food = foodService.getFoodById(foodId);
+        return food.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -36,5 +36,15 @@ public class FoodController {
         return new ResponseEntity(link, HttpStatus.OK);
     }
 
+    @DeleteMapping("/food/{foodId}")
+    public ResponseEntity<Food> deleteFood(@PathVariable(name = "foodId") final String foodId) {
+        Optional<Food> food = foodService.getFoodById(foodId);
+        if(food.isPresent()) {
+            foodService.deleteFood(foodId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 

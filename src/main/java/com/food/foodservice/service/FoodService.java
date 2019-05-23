@@ -1,6 +1,7 @@
 package com.food.foodservice.service;
 
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 
 import com.food.foodservice.model.Food;
@@ -17,13 +18,17 @@ public class FoodService {
         return foodRepository.getAllFoods();
     }
 
-    public Food retrieveFood(String foodId) {
-        return foodRepository.getFood(foodId);
+    public Optional<Food> getFoodById(String foodId) {
+        return Optional.ofNullable(foodRepository.getFood(foodId));
     }
 
     public String addFood(@Valid Food food) {
         String foodId = foodRepository.addFood(food);
         return foodId;
+    }
+
+    public void deleteFood(String foodId) {
+        foodRepository.removeFood(foodId);
     }
 
 }

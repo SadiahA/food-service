@@ -115,8 +115,7 @@ public class MongoFoodRepository implements FoodRepository {
 
     @Override
     public void removeFood(String id) {
-
-//        Bson bson = database.getCollection(
-//        database.getCollection("foodItems").deleteOne(bson)
+        MongoCollection<Document> foodItems = database.getCollection("foodItems");
+        foodItems.deleteOne(new Document("_id", new ObjectId(id)));
     }
 }
