@@ -1,21 +1,15 @@
 package com.food.foodservice.model;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Food {
 
-    private String id;
     private String name;
     private List<String> categories;
     private double calories;
     private double cost;
 
     public Food() {
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -48,9 +42,5 @@ public class Food {
 
     public void setCost(double cost) {
         this.cost = cost;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
