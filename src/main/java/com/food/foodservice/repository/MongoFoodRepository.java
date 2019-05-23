@@ -81,22 +81,14 @@ public class MongoFoodRepository implements FoodRepository {
     private Food convertDocumentToFood(Document document) {
         Food food = new Food();
 
-        // id
-        ObjectId id = document.getObjectId("_id");
-        food.setId(id.toString());
-
-        // name
         food.setName(document.get("name").toString());
 
-        // categories
         List<String> categories = (List<String>) document.get("categories");
         food.setCategories(categories);
 
-        // calories
         Double calories = (Double) document.get("calories");
         food.setCalories(calories);
 
-        // cost
         String cost = document.get("cost").toString();
         food.setCost(Double.parseDouble(cost));
 
