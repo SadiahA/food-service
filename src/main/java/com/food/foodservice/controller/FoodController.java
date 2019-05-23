@@ -1,5 +1,6 @@
 package com.food.foodservice.controller;
 
+import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 
@@ -34,6 +35,16 @@ public class FoodController {
         String uuid = foodService.addFood(food);
         Link link = new Link("/food/" + uuid);
         return new ResponseEntity(link, HttpStatus.OK);
+    }
+
+    @GetMapping("/foods")
+    public ResponseEntity<Food> getAllFoods() {
+        Optional<List<Food>> allFoods = foodService.getAllFoods();
+        if(allFoods.isPresent()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/food/{foodId}")

@@ -14,8 +14,8 @@ public class FoodService {
     @Autowired
     private FoodRepository foodRepository;
 
-    public List<Food> retrieveAllFoods() {
-        return foodRepository.getAllFoods();
+    public Optional<List<Food>> getAllFoods() {
+        return Optional.ofNullable(foodRepository.getAllFoods());
     }
 
     public Optional<Food> getFoodById(String foodId) {

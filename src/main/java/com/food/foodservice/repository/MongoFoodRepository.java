@@ -47,7 +47,6 @@ public class MongoFoodRepository implements FoodRepository {
             e.printStackTrace();
             return null;
         }
-
     }
 
     @Override
@@ -67,15 +66,19 @@ public class MongoFoodRepository implements FoodRepository {
 
     @Override
     public List<Food> getAllFoods() {
-        List<FindIterable<Document>> listOfFoods = new ArrayList<>();
+        List<Food> foodList = new ArrayList<>();
+
+        // get collection
         MongoCollection<Document> foodItems = database.getCollection("foodItems");
 
+        // get all documents from collection
+        FindIterable<Document> allDocuments = foodItems.find();
 
-        for (FindIterable<Document> food : listOfFoods) {
-            listOfFoods.add(foodItems.find());
+        for(Document document : allDocuments) {
+            foodList.add(convertDocumentToFood(document));
         }
-
         return null;
+
     }
 
     private Food convertDocumentToFood(Document document) {
@@ -94,8 +97,6 @@ public class MongoFoodRepository implements FoodRepository {
 
         return food;
     }
-
-
 
     @Override
     public void updateFood(String id) {
