@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.food.foodservice.model.Food;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+@Primary
 @Repository
 public class HashFoodRepository implements FoodRepository {
     private Map<String, Food> foods;
@@ -18,8 +21,10 @@ public class HashFoodRepository implements FoodRepository {
 
     @Override
     public String addFood(Food foodItem) {
-//        foods.put(foodItem);
-        return "";
+        UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
+        foods.put(randomUUIDString, foodItem);
+        return randomUUIDString;
     }
 
     @Override
