@@ -1,5 +1,6 @@
 package com.food.foodservice.controller;
 
+import java.util.Optional;
 import javax.validation.Valid;
 
 import com.food.foodservice.model.Food;
@@ -22,12 +23,10 @@ public class FoodController {
 
     @GetMapping("/food/{foodId}")
     public ResponseEntity<Food> getFoodWithId(@PathVariable(name = "foodId") final String foodId) {
-        final Food foodItem = foodService.retrieveFood(foodId);
-        if (foodItem != null) {
-            return new ResponseEntity<>(foodItem, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(foodItem, HttpStatus.NOT_FOUND);
-        }
+        final Food food = foodService.retrieveFood(foodId);
+        return Optional.ofNullable(food)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/foods")
