@@ -38,10 +38,10 @@ public class FoodController {
     }
 
     @GetMapping("/foods")
-    public ResponseEntity<Food> getAllFoods() {
+    public ResponseEntity<List<Food>> getAllFoods() {
         Optional<List<Food>> allFoods = foodService.getAllFoods();
         if(allFoods.isPresent()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(allFoods.get());
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -9,6 +9,7 @@ public class Food {
     private double calories;
     private double cost;
 
+
     public Food() {
     }
 
@@ -43,4 +44,17 @@ public class Food {
     public void setCost(double cost) {
         this.cost = cost;
     }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Food{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", categories=").append(categories);
+        sb.append(", calories=").append(calories);
+        sb.append(", cost=").append(cost);
+        sb.append('}');
+        return sb.toString();
+    }
+
 }

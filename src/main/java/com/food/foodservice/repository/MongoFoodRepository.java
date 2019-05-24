@@ -68,33 +68,41 @@ public class MongoFoodRepository implements FoodRepository {
     public List<Food> getAllFoods() {
         List<Food> foodList = new ArrayList<>();
 
-        // get collection
+        database.getCollection("foodItems");
+
+        BasicDBObject searchQuery = new BasicDBObject();
         MongoCollection<Document> foodItems = database.getCollection("foodItems");
 
-        // get all documents from collection
-        FindIterable<Document> allDocuments = foodItems.find();
 
-        for(Document document : allDocuments) {
+        FindIterable<Document> cursor = foodItems.find(searchQuery);
+
+        for(Document document : cursor) {
             foodList.add(convertDocumentToFood(document));
         }
-        return null;
 
+        return foodList;
     }
 
     private Food convertDocumentToFood(Document document) {
         Food food = new Food();
 
-        food.setName(document.get("name").toString());
+        Object name = document.get("name");
+        Object categories = document.get("categories");
+        Object calories = document.get("calories");
+        Object cost = document.get("cost");
 
-        List<String> categories = (List<String>) document.get("categories");
-        food.setCategories(categories);
-
-        Double calories = (Double) document.get("calories");
-        food.setCalories(calories);
-
-        String cost = document.get("cost").toString();
-        food.setCost(Double.parseDouble(cost));
-
+        if(name != null) {
+            food.setName(name.toString());
+        }
+        if(categories != null) {
+            food.setCategories((List<String>) categories);
+        }
+        if(calories != null) {
+            food.setCalories((Double) calories);
+        }
+        if(cost != null) {
+            food.setCost(Double.parseDouble(cost.toString()));
+        }
         return food;
     }
 
