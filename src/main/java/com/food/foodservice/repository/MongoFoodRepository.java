@@ -42,11 +42,10 @@ public class MongoFoodRepository implements FoodRepository {
             for (Document document : cursor) {
                 return convertDocumentToFood(document);
             }
-            return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -66,21 +65,26 @@ public class MongoFoodRepository implements FoodRepository {
 
     @Override
     public List<Food> getAllFoods() {
-        List<Food> foodList = new ArrayList<>();
+        // TODO: Put a try catch in here and return null
+        try {
+            List<Food> foodList = new ArrayList<>();
 
-        database.getCollection("foodItems");
+            database.getCollection("foodItems");
 
-        BasicDBObject searchQuery = new BasicDBObject();
-        MongoCollection<Document> foodItems = database.getCollection("foodItems");
+            BasicDBObject searchQuery = new BasicDBObject();
+            MongoCollection<Document> foodItems = database.getCollection("foodItems");
 
 
-        FindIterable<Document> cursor = foodItems.find(searchQuery);
+            FindIterable<Document> cursor = foodItems.find(searchQuery);
 
-        for(Document document : cursor) {
-            foodList.add(convertDocumentToFood(document));
+            for(Document document : cursor) {
+                foodList.add(convertDocumentToFood(document));
+            }
+
+            return foodList;
+        } catch (NullPointerException e) {
+            return null;
         }
-
-        return foodList;
     }
 
     private Food convertDocumentToFood(Document document) {
