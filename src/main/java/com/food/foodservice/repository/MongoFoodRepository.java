@@ -21,7 +21,6 @@ public class MongoFoodRepository implements FoodRepository {
 
     private MongoClient mongoClient;
     private MongoDatabase database;
-    private static final Gson GSON = new Gson();
 
     public MongoFoodRepository() {
         mongoClient = new MongoClient("localhost", 27017);
