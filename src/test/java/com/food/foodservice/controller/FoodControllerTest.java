@@ -79,8 +79,17 @@ public class FoodControllerTest {
                 .andExpect(status().isOk()).andExpect(content().string(linkJson));
     }
 
-    // ****** Test for when InvalidFoodItem is posted ******
+    @Test
+    public void addingInValidFoodItemAndReturn400Response() throws Exception {
+        // given
+        Gson gson = new Gson();
+        String invalidFoodJson = gson.toJson(new Food()).substring(0, 10);
+        given(foodService.addFood(any(Food.class))).willReturn("2345");
 
+        // when + then
+        this.mockMvc.perform(post("/foods").contentType(MediaType.APPLICATION_JSON).content(invalidFoodJson))
+                .andExpect(status().is4xxClientError());
+    }
 
     @Test
     public void deletingAnExistingFoodItemAndReturns204Response() throws Exception {
@@ -118,14 +127,4 @@ public class FoodControllerTest {
         // when + then
         this.mockMvc.perform(get("/foods")).andExpect(status().isNotFound());
     }
-
-
-
-
-
-
-
-
-
-
 }
