@@ -2,6 +2,7 @@ package com.food.foodservice.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.food.foodservice.model.Food;
 import com.google.gson.Gson;
@@ -19,19 +20,22 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MongoFoodRepository implements FoodRepository {
 
-    private MongoClient mongoClient;
+    private MongoClient mongoClient;  //to be moved
     private MongoDatabase database;
 
+    //autowired
+    //mongoconfig
+
     public MongoFoodRepository() {
-        mongoClient = new MongoClient("localhost", 27017);
-        database = mongoClient.getDatabase("food");
+        mongoClient = new MongoClient("localhost", 27017);   //extract these 2 lines into own class. say MongoConfig.java
+        database = mongoClient.getDatabase("food");   //inject new MongoConfig into here.
 //        database.createCollection("foodItems");
     }
 
     @Override
     public Food getFood(String id) {
         try {
-            MongoCollection<Document> foodItems = database.getCollection("foodItems");
+            MongoCollection<Document> foodItems = database.getCollection("foodItems");   // = this.mongoConfig.getCollection("foodItems").
 
             BasicDBObject query = new BasicDBObject(); //represents query in search criteria
             query.put("_id", new ObjectId(id));
