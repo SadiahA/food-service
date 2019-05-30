@@ -11,8 +11,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FoodService {
-    @Autowired
+
+
     private FoodRepository foodRepository;
+
+    @Autowired
+    public FoodService(FoodRepository foodRepository) {
+        this.foodRepository = foodRepository;
+    }
 
     public Optional<List<Food>> getAllFoods() {
         return Optional.ofNullable(foodRepository.getAllFoods());
@@ -29,6 +35,22 @@ public class FoodService {
 
     public void deleteFood(String foodId) {
         foodRepository.removeFood(foodId);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FoodService that = (FoodService) o;
+
+        return foodRepository != null ? foodRepository.equals(that.foodRepository) : that.foodRepository == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return foodRepository != null ? foodRepository.hashCode() : 0;
     }
 
 }
