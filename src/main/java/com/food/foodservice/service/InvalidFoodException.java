@@ -1,4 +1,4 @@
 package com.food.foodservice.service;
 
-public class InvalidFoodException {
+public class InvalidFoodException extends Exception {
 }
