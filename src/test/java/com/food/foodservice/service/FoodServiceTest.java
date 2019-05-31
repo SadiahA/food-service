@@ -1,28 +1,28 @@
 package com.food.foodservice.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import com.food.foodservice.model.Food;
 import com.food.foodservice.repository.FoodRepository;
-import com.food.foodservice.repository.HashFoodRepository;
+import com.food.foodservice.repository.InMemoryFoodRepository;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class FoodServiceTest {
 
     private FoodService foodService;
 
-    private FoodRepository hashFoodRepo;
+    private FoodRepository inMemoryFoodRepo;
 
     @Before
     public void setUp() throws Exception {
-        hashFoodRepo = new HashFoodRepository();
-        foodService = new FoodService(hashFoodRepo);
+        inMemoryFoodRepo = new InMemoryFoodRepository();
+        foodService = new FoodService(inMemoryFoodRepo);
     }
 
     @Test
@@ -34,27 +34,24 @@ public class FoodServiceTest {
 
        List<Food> foodList = Arrays.asList(food1, food2, food3);
 
-       hashFoodRepo.addFood(food1);
-       hashFoodRepo.addFood(food2);
-       hashFoodRepo.addFood(food3);
+       inMemoryFoodRepo.addFood(food1);
+       inMemoryFoodRepo.addFood(food2);
+       inMemoryFoodRepo.addFood(food3);
 
         // when
         Optional<List<Food>> actualResult = foodService.getAllFoods();
 
         // then
-        assertEquals(Optional.of(foodList), actualResult);
+        assertEquals(foodList, actualResult.get());
     }
 
     @Test
     public void getAllFoodsReturnsAnOptionalEmptyListWhenListOfFoodsIsNotAvailable() {
-        // given
-        List<Food> foodList = new ArrayList<>();
-
         // when
         Optional<List<Food>> actualResult = foodService.getAllFoods();
 
         // then
-        assertEquals(Optional.of(foodList), actualResult);
+        assertEquals(Optional.empty(), actualResult);
     }
 
     @Test
@@ -66,7 +63,7 @@ public class FoodServiceTest {
         food.setCost(60);
         food.setCategories(Arrays.asList("greens", "vegetable"));
 
-        String id = hashFoodRepo.addFood(food);
+        String id = inMemoryFoodRepo.addFood(food);
 
         // when
         Optional<Food> actualResult = foodService.getFoodById(id);
@@ -88,24 +85,27 @@ public class FoodServiceTest {
     }
 
     @Test
-    public void addFoodReturnsAFoodIdWhenValidFoodItemIsAdded() {
+    public void addFoodReturnsAFoodIdWhenAFoodItemIsAdded() throws InvalidFoodException {
         // given
         Food food =  new Food();
 
         // when
-        String actualResult = foodService.addFood(food);
+        String foodId = foodService.addFood(food);
 
         // then
-       assertNotNull(actualResult);
+       assertEquals(inMemoryFoodRepo.getFood(foodId), food);
     }
 
-    // How to test an invalid food object? Validation done by @Valid
+    @Test(expected = InvalidFoodException.class)
+    public void addFoodThrowsExceptionWhenInvalidFoodItemIsAdded() throws InvalidFoodException {
+        foodService.addFood(null);
+    }
 
     @Test
     public void deleteFoodRemovesFoodItemFromRepository() {
         // given
         Food food = new Food();
-        String foodId = hashFoodRepo.addFood(food);
+        String foodId = inMemoryFoodRepo.addFood(food);
 
         // then
         assertNotNull(foodService.getFoodById(foodId));
@@ -115,17 +115,6 @@ public class FoodServiceTest {
 
         // then
         assertEquals(Optional.empty(), foodService.getFoodById(foodId));
+        assertNull(inMemoryFoodRepo.getFood(foodId));
     }
-
-    @Test
-    public void deleteFoodReturnsNullIfFoodIdNotFound() {
-     // can't test this as it doesn't go into the food service at all if the food item is not present
-        // this is checked at the controller level
-    }
-
-
-
-
-
-
 }
