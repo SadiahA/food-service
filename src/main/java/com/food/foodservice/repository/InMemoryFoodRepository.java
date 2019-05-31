@@ -2,19 +2,22 @@ package com.food.foodservice.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import com.food.foodservice.model.Food;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+@Primary
 @Repository
 public class HashFoodRepository implements FoodRepository {
     private Map<String, Food> foods;
 
     public HashFoodRepository() {
-        foods  = new HashMap<>();
+        foods  = new LinkedHashMap<>();
     }
 
     @Override
