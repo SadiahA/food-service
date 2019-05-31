@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.food.foodservice.model.Food;
 import com.food.foodservice.service.FoodService;
+import com.food.foodservice.service.InvalidFoodException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,12 @@ public class FoodController {
 
     @PostMapping("/foods")
     public ResponseEntity<Link> addFood(@Valid @RequestBody Food food) {
-        String uuid = foodService.addFood(food);
+        String uuid = null;
+        try {
+            uuid = foodService.addFood(food);
+        } catch (InvalidFoodException e) {
+            return ResponseEntity.badRequest().build();
+        }
         Link link = new Link("/food/" + uuid);
         return new ResponseEntity(link, HttpStatus.OK);
     }
