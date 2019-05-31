@@ -13,10 +13,10 @@ import org.springframework.stereotype.Repository;
 
 @Primary
 @Repository
-public class HashFoodRepository implements FoodRepository {
+public class InMemoryFoodRepository implements FoodRepository {
     private Map<String, Food> foods;
 
-    public HashFoodRepository() {
+    public InMemoryFoodRepository() {
         foods  = new LinkedHashMap<>();
     }
 
