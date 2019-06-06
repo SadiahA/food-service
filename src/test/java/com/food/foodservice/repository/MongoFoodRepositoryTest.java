@@ -1,60 +1,76 @@
 package com.food.foodservice.repository;
 
+import java.util.Arrays;
+
 import com.food.foodservice.model.Food;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-import org.junit.After;
+import com.food.foodservice.mongoConfig.MongoDBConfig;
+import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
+import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes={MongoFoodRepositoryTest.TestConfiguration.class})
+@ContextConfiguration( classes = {MongoFoodRepository.class})
 public class MongoFoodRepositoryTest {
 
-    private MongoCollection<Document> collection;
+    @Autowired
+    private FoodRepository foodRepository;
 
-    private FakeMongoConfig fakeMongoConfig;
-
-    private MongoFoodRepository mongoFoodRepository;
-
+    @Mock
+    private MongoDBConfig mongoDBConfig;
 
     @Before
     public void setUp() throws Exception {
 
-        collection = fakeMongoConfig.getMongoClient().getDatabase().getCollection("testcollection");
+        foodRepository = new MongoFoodRepository(mongoDBConfig);
 
-        mongoFoodRepository = new MongoFoodRepository(fakeMongoConfig);
+        Food food2 = new Food();
+        Food food3 = new Food();
+        Food food4 = new Food();
+
+
+        foodRepository.addFood(food2);
+        foodRepository.addFood(food3);
+        foodRepository.addFood(food4);
     }
 
-    @After
-    public void tearDown() {
-        fakeMongoConfig.getMongoClient().close();
-        fakeMongoConfig.getServer().shutdown();
-    }
 
     @Test
     public void getFoodReturnsAFoodItemForAGivenId() {
         // given
-        Document document = new Document("_id", 1234);
-        collection.insertOne(document);
+        Food food1 = new Food();
+        food1.setCategories(Arrays.asList("fruit"));
+        food1.setCalories(45.0);
+        food1.setName("strawberries");
+
+        String foodId = foodRepository.addFood(food1);
 
         // when
-        Food food = mongoFoodRepository.getFood("1234");
+        Food actualFood = foodRepository.getFood(foodId);
 
         // then
-        assertEquals(new Food(), mongoFoodRepository);
-
+        assertEquals(food1, actualFood);
 
     }
 
-}
-
     @Configuration
-    @EnableMongoRepositories
+    @EnableMongoRepositories(basePackageClasses={MongoFoodRepository.class})
     protected static class TestConfiguration {
         @Bean
         public MongoTemplate mongoTemplate(MongoClient mongoClient) {
@@ -78,10 +94,6 @@ public class MongoFoodRepositoryTest {
             return new MongoClient(new ServerAddress(mongoServer.getLocalAddress()));
         }
     }
-
-
-
-
 
 
 

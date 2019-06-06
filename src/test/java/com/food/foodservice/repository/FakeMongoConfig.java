@@ -20,14 +20,9 @@ public class FakeMongoConfig extends MongoDBConfig {
     private MongoServer server;
 
 
-    private FakeMongoConfig() {
-
+    protected FakeMongoConfig() {
         super();
         server = new MongoServer(new MemoryBackend());
-
-        // optionally: server.enableSsl(key, keyPassword, certificate);
-
-        // bind on a random local port
         InetSocketAddress serverAddress = server.bind();
 
         client = new MongoClient(new ServerAddress(serverAddress));
@@ -35,6 +30,8 @@ public class FakeMongoConfig extends MongoDBConfig {
     }
 
     // I can't make this class extend AbstractMongoConfiguraton
+
+
 
     protected String getDatabase() {
         return "foodDb";
