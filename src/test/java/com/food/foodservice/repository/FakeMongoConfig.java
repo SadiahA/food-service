@@ -1,8 +1,14 @@
 package com.food.foodservice.repository;
 
+import java.net.InetSocketAddress;
+
 import com.food.foodservice.mongoConfig.MongoDBConfig;
 import com.github.fakemongo.Fongo;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
+import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,20 +16,37 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackageClasses = {MongoFoodRepository.class})
 public class FakeMongoConfig extends MongoDBConfig {
 
+    private MongoClient client;
+    private MongoServer server;
+
+
     private FakeMongoConfig() {
+
         super();
+        server = new MongoServer(new MemoryBackend());
+
+        // optionally: server.enableSsl(key, keyPassword, certificate);
+
+        // bind on a random local port
+        InetSocketAddress serverAddress = server.bind();
+
+        client = new MongoClient(new ServerAddress(serverAddress));
+
     }
 
     // I can't make this class extend AbstractMongoConfiguraton
 
-    protected String getDatabaseName() {
-        return "mockDB";
+    protected String getDatabase() {
+        return "foodDb";
     }
 
     public Mongo mongo() {
-        return new Fongo(getDatabaseName()).getMongo();
+        return new Fongo(getDatabase()).getMongo();
     }
 
+    public MongoServer getServer() {
+        return server;
+    }
 //    @Bean
 //    public MongoClient mongo() {
 //        Fongo fongo = new Fongo("mockDB");
