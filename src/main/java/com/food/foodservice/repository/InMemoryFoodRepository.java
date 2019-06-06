@@ -7,10 +7,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.food.foodservice.model.Food;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-@Primary
 @Repository
 public class InMemoryFoodRepository implements FoodRepository {
     private Map<String, Food> foods;
