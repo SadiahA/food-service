@@ -4,35 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.food.foodservice.model.Food;
+import com.food.foodservice.mongoConfig.MongoDBConfig;
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-
+@Primary
 @Repository
 public class MongoFoodRepository implements FoodRepository {
 
-    private MongoClient mongoClient;  //to be moved
-    private MongoDatabase database;
+    private MongoDBConfig mongoDBConfig;
 
-    //autowired
-    //mongoconfig
-
-    public MongoFoodRepository() {
-        mongoClient = new MongoClient("localhost", 27017);   //extract these 2 lines into own class. say MongoConfig.java
-        database = mongoClient.getDatabase("food");   //inject new MongoConfig into here.
-//        database.createCollection("foodItems");
+    @Autowired
+    public MongoFoodRepository(MongoDBConfig mongoDBConfig) {
+        this.mongoDBConfig = mongoDBConfig;
     }
 
     @Override
     public Food getFood(String id) {
         try {
-            MongoCollection<Document> foodItems = database.getCollection("foodItems");   // = this.mongoConfig.getCollection("foodItems").
+            MongoCollection<Document> foodItems = this.mongoDBConfig.getMongoDatabase().getCollection("foodItems");
 
             BasicDBObject query = new BasicDBObject(); //represents query in search criteria
             query.put("_id", new ObjectId(id));
@@ -50,7 +46,7 @@ public class MongoFoodRepository implements FoodRepository {
 
     @Override
     public String addFood(Food foodItem) {
-        MongoCollection<Document> foodItems = database.getCollection("foodItems");
+        MongoCollection<Document> foodItems = this.mongoDBConfig.getMongoDatabase().getCollection("foodItems");
 
         Document document = new Document();
         document.append("name", foodItem.getName());
@@ -69,10 +65,10 @@ public class MongoFoodRepository implements FoodRepository {
         try {
             List<Food> foodList = new ArrayList<>();
 
-            database.getCollection("foodItems");
+            this.mongoDBConfig.getMongoDatabase().getCollection("foodItems");
 
             BasicDBObject searchQuery = new BasicDBObject();
-            MongoCollection<Document> foodItems = database.getCollection("foodItems");
+            MongoCollection<Document> foodItems = this.mongoDBConfig.getMongoDatabase().getCollection("foodItems");
 
 
             FindIterable<Document> cursor = foodItems.find(searchQuery);
@@ -128,7 +124,7 @@ public class MongoFoodRepository implements FoodRepository {
 
     @Override
     public void removeFood(String id) {
-        MongoCollection<Document> foodItems = database.getCollection("foodItems");
+        MongoCollection<Document> foodItems = this.mongoDBConfig.getMongoDatabase().getCollection("foodItems");
         foodItems.deleteOne(new Document("_id", new ObjectId(id)));
     }
 }
