@@ -1,16 +1,18 @@
 package com.food.foodservice.repository;
 
+import com.food.foodservice.mongoConfig.MongoDBConfig;
 import com.github.fakemongo.Fongo;
-import com.mongodb.FongoDB;
 import com.mongodb.Mongo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 @Configuration
 @ComponentScan(basePackageClasses = {MongoFoodRepository.class})
-public class FakeMongo {
+public class FakeMongoConfig extends MongoDBConfig {
+
+    private FakeMongoConfig() {
+        super();
+    }
 
     // I can't make this class extend AbstractMongoConfiguraton
 

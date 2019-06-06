@@ -19,7 +19,7 @@ public class MongoDBConfig {
     private final MongoDatabase mongoDatabase;
 
 
-    private MongoDBConfig() {
+    protected MongoDBConfig() {
         mongoClient = new MongoClient(HOST_NAME, PORT);
         mongoDatabase = mongoClient.getDatabase(DB_NAME);
     }
