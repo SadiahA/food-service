@@ -12,7 +12,6 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
 
 @Primary
 public class MongoFoodRepository implements FoodRepository {
