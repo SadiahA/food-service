@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration( classes = {MongoFoodRepository.class, FakeMongoDBConfig.class})
-public class MongoFoodRepositoryTest {
+public class MongoFoodRepositoryTest {  //mongo integration test
 
 
     private MongoFoodRepository foodRepository;
@@ -124,5 +124,7 @@ public class MongoFoodRepositoryTest {
 
         // then
         assertEquals(3, foodRepository.getAllFoods().size());
+
+        assertEquals(3, this.fakeMongoDBConfig.getMongoDatabase().getCollection("foodItems").countDocuments());
     }
 }
