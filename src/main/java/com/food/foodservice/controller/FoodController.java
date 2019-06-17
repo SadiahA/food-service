@@ -1,5 +1,6 @@
 package com.food.foodservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -7,6 +8,8 @@ import javax.validation.Valid;
 import com.food.foodservice.model.Food;
 import com.food.foodservice.service.FoodService;
 import com.food.foodservice.service.InvalidFoodException;
+import com.food.foodservice.view.AlternativeFoodView;
+import com.food.foodservice.view.FoodView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.http.HttpStatus;
@@ -25,17 +28,28 @@ public class FoodController {
     private FoodService foodService;
 
     @GetMapping("/food/{foodId}")
-    public ResponseEntity<Food> getFoodWithId(@PathVariable(name = "foodId") final String foodId) {
+    public ResponseEntity<FoodView> getFoodWithId(@PathVariable(name = "foodId") final String foodId) {
         final Optional<Food> food = foodService.getFoodById(foodId);
-        return food.map(ResponseEntity::ok)
+
+        //transforming food to foodview within optional box
+        Optional<FoodView> foodView = food.map(f -> new AlternativeFoodView(f));
+
+        return foodView.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/foods")
-    public ResponseEntity<Link> addFood(@Valid @RequestBody Food food) {
+    public ResponseEntity<Link> addFood(@Valid @RequestBody AlternativeFoodView foodView) {
         String uuid = null;
         try {
+            Food food = new Food();
+            food.setName(foodView.getName());
+            food.setCategories(foodView.getCategories());
+            food.setCalories(foodView.getCalories());
+            food.setCost(foodView.getCost());
+
             uuid = foodService.addFood(food);
+
         } catch (InvalidFoodException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -44,10 +58,21 @@ public class FoodController {
     }
 
     @GetMapping("/foods")
-    public ResponseEntity<List<Food>> getAllFoods() {
+    public ResponseEntity<List<FoodView>> getAllFoods() {
         Optional<List<Food>> allFoods = foodService.getAllFoods();
+
+        // one liner urgh
+        // Optional<List<AlternativeFoodView>> alternativeFoodViews = allFoods.map(foodList -> foodList.stream().map(f -> new AlternativeFoodView(f)).collect(Collectors.toList()));
+        // transform list of foods to list of foodViews
+
         if(allFoods.isPresent()) {
-            return ResponseEntity.ok(allFoods.get());
+            List<FoodView> foodViewList = new ArrayList<>();
+
+            for (Food food : allFoods.get()) {
+                FoodView foodView = new AlternativeFoodView(food);
+                foodViewList.add(foodView);
+            }
+            return ResponseEntity.ok(foodViewList);
         } else {
             return ResponseEntity.notFound().build();
         }
