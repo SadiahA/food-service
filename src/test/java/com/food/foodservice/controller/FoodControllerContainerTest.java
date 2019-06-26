@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.food.foodservice.model.Food;
 import com.food.foodservice.service.FoodService;
+import com.food.foodservice.view.AlternativeFoodView;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,13 +47,18 @@ public class FoodControllerTest {
 
         given(foodService.getFoodById("1234")).willReturn(Optional.of(food));
 
+        AlternativeFoodView alternativeFoodView = new AlternativeFoodView();
+        alternativeFoodView.setName("courgette");
+        alternativeFoodView.setCategories(Arrays.asList("vegetables", "greens", "health-food"));
+        alternativeFoodView.setCost(20);
+        alternativeFoodView.setCalories(30);
+
+        String expectedFoodView = "{'name':'[courgette]','categories':['vegetables','greens','health-food'],'calories':0.0,'cost':20.0}";
+
         // when + then
         this.mockMvc.perform(get("/food/1234"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{'name': 'courgette'," +
-                        "'categories': ['vegetables','greens','health-food'], " +
-                        "'calories': 30 , " +
-                        "'cost': 20 }"));
+                .andExpect(content().json(expectedFoodView));
     }
 
     @Test

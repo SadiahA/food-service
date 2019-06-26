@@ -21,15 +21,9 @@ public class AlternativeFoodView implements FoodView {
         this.cost = food.getCost();
     }
 
-
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -38,18 +32,8 @@ public class AlternativeFoodView implements FoodView {
     }
 
     @Override
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
-    }
-
-    @Override
     public double getCalories() {
-        return 0;
-    }
-
-    @Override
-    public void setCalories(double calories) {
-
+        return calories;
     }
 
     @Override
@@ -57,8 +41,4 @@ public class AlternativeFoodView implements FoodView {
         return cost;
     }
 
-    @Override
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
 }
