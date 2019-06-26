@@ -9,16 +9,11 @@ public class DelegatingFoodView implements FoodView {
     private Food food;
     
     public DelegatingFoodView(Food food) {
-        food = new Food();
+        this.food = food;
     }
 
     public String getName() {
-        return food.getName() + " - " + food.getCategories() + "kcal";
-    }
-
-    @Override
-    public void setName(String name) {
-
+        return food.getName() + " - " + food.getCalories() + "kcal";
     }
 
     public List<String> getCategories() {
@@ -26,27 +21,25 @@ public class DelegatingFoodView implements FoodView {
     }
 
     @Override
-    public void setCategories(List<String> categories) {
-
-    }
-
-    @Override
     public double getCalories() {
-        return 0;
-    }
-
-    @Override
-    public void setCalories(double calories) {
-
+        return food.getCalories();
     }
 
     public double getCost() {
         return food.getCost();
     }
 
-    @Override
-    public void setCost(double cost) {
+    public String displayCost() {
+        double cost  = food.getCost();
 
+        if(cost % 10 == 0) {
+            return String.format("£%.0f", cost);
+        }
+
+        if(cost < 1.00) {
+            return Math.round(cost*100) + "p";
+        }
+
+        return "£" + String.format("%.2f", cost) + "p";
     }
-
 }
