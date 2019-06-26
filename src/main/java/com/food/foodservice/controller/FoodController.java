@@ -24,8 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FoodController {
 
-    @Autowired
     private FoodService foodService;
+
+    @Autowired
+    public FoodController(FoodService foodService) {
+        this.foodService = foodService;
+    }
 
     @GetMapping("/food/{foodId}")
     public ResponseEntity<FoodView> getFoodWithId(@PathVariable(name = "foodId") final String foodId) {
@@ -39,16 +43,10 @@ public class FoodController {
     }
 
     @PostMapping("/foods")
-    public ResponseEntity<Link> addFood(@Valid @RequestBody AlternativeFoodView foodView) {
+    public ResponseEntity<Link> addFood(@Valid @RequestBody FoodView foodView) {
         String uuid = null;
         try {
-            Food food = new Food();
-            food.setName(foodView.getName());
-            food.setCategories(foodView.getCategories());
-            food.setCalories(foodView.getCalories());
-            food.setCost(foodView.getCost());
-
-            uuid = foodService.addFood(food);
+            uuid = foodService.addFood(foodView);
 
         } catch (InvalidFoodException e) {
             return ResponseEntity.badRequest().build();
