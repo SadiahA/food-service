@@ -7,6 +7,8 @@ import java.util.Optional;
 import com.food.foodservice.model.Food;
 import com.food.foodservice.repository.FoodRepository;
 import com.food.foodservice.repository.InMemoryFoodRepository;
+import com.food.foodservice.view.DelegatingFoodView;
+import com.food.foodservice.view.FoodView;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -87,13 +89,13 @@ public class FoodServiceTest {
     @Test
     public void addFoodReturnsAFoodIdWhenAFoodItemIsAdded() throws InvalidFoodException {
         // given
-        Food food =  new Food();
+        FoodView foodView =  new DelegatingFoodView(new Food());
 
         // when
-        String foodId = foodService.addFood(food);
+        String foodId = foodService.addFood(foodView);
 
         // then
-       assertEquals(inMemoryFoodRepo.getFood(foodId), food);
+       assertEquals(inMemoryFoodRepo.getFood(foodId), foodService.getFoodById(foodId).get());
     }
 
     @Test(expected = InvalidFoodException.class)
