@@ -7,7 +7,10 @@ import com.food.foodservice.model.Food;
 public class DelegatingFoodView implements FoodView {
 
     private Food food;
-    
+
+    public DelegatingFoodView() {
+    }
+
     public DelegatingFoodView(Food food) {
         this.food = food;
     }
