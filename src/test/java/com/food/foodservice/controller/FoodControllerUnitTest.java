@@ -3,6 +3,8 @@ package com.food.foodservice.controller;
 import com.food.foodservice.model.Food;
 import com.food.foodservice.service.FoodService;
 import com.food.foodservice.service.InvalidFoodException;
+import com.food.foodservice.view.DelegatingFoodView;
+import com.food.foodservice.view.FoodView;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,11 +16,13 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class FoodControllerOtherTest {
+public class FoodControllerUnitTest {
 
     private FoodController foodController;
 
     private Food food;
+
+    private FoodView foodView;
 
     @Mock
     private FoodService foodService;
@@ -27,17 +31,16 @@ public class FoodControllerOtherTest {
     public void setUp() throws Exception {
         initMocks(this);
         food = new Food();
+        foodView = new DelegatingFoodView(food);
         foodController = new FoodController(foodService);
     }
 
     @Test
     public void test1() throws InvalidFoodException {
-        // given
-
         // when
-        when(foodService.addFood(food)).thenReturn("1234");
+        when(foodService.addFood(foodView)).thenReturn("1234");
 
-        ResponseEntity<Link> linkResponseEntity = foodController.addFood(food);
+        ResponseEntity<Link> linkResponseEntity = foodController.addFood(foodView);
 
         assertEquals(HttpStatus.OK, linkResponseEntity.getStatusCode());
         assertEquals("/food/1234", linkResponseEntity.getBody().getHref());
