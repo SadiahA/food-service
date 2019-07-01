@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.food.foodservice.model.Food;
 import com.food.foodservice.service.FoodService;
 import com.food.foodservice.view.AlternativeFoodView;
+import com.food.foodservice.view.FoodView;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(FoodController.class)
-public class FoodControllerTest {
+public class FoodControllerContainerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,18 +48,12 @@ public class FoodControllerTest {
 
         given(foodService.getFoodById("1234")).willReturn(Optional.of(food));
 
-        AlternativeFoodView alternativeFoodView = new AlternativeFoodView();
-        alternativeFoodView.setName("courgette");
-        alternativeFoodView.setCategories(Arrays.asList("vegetables", "greens", "health-food"));
-        alternativeFoodView.setCost(20);
-        alternativeFoodView.setCalories(30);
-
-        String expectedFoodView = "{'name':'[courgette]','categories':['vegetables','greens','health-food'],'calories':0.0,'cost':20.0}";
+        String expectedFoodView = "{'name':'[courgette]','categories':['vegetables','greens','health-food'],'calories':30.0,'cost':20.0}";
 
         // when + then
         this.mockMvc.perform(get("/food/1234"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedFoodView));
+                 .andExpect(content().json(expectedFoodView));
     }
 
     @Test
@@ -76,7 +71,7 @@ public class FoodControllerTest {
         // given
         Gson gson = new Gson();
         String foodJson = gson.toJson(new Food());
-        given(foodService.addFood(any(Food.class))).willReturn("2345");
+        given(foodService.addFood(any(FoodView.class))).willReturn("2345");
 
         String linkJson = gson.toJson(new Link("/food/" + "2345"));
 
@@ -90,7 +85,7 @@ public class FoodControllerTest {
         // given
         Gson gson = new Gson();
         String invalidFoodJson = gson.toJson(new Food()).substring(0, 10);
-        given(foodService.addFood(any(Food.class))).willReturn("2345");
+        given(foodService.addFood(any(FoodView.class))).willReturn("2345");
 
         // when + then
         this.mockMvc.perform(post("/foods").contentType(MediaType.APPLICATION_JSON).content(invalidFoodJson))

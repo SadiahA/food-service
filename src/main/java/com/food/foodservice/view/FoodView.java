@@ -2,6 +2,9 @@ package com.food.foodservice.view;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(as = DelegatingFoodView.class)
 public interface FoodView {
     public String getName();
 
