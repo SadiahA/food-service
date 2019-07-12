@@ -19,7 +19,7 @@ public class DelegatingFoodViewTest {
         food.setCalories(106);
         food.setCategories(Arrays.asList("fruit", "glucose"));
 
-        foodView = new DelegatingFoodView(food);
+        foodView = new UpdateFoodView(food);
     }
 
     private void foodSetUp() {
@@ -80,25 +80,25 @@ public class DelegatingFoodViewTest {
     @Test
     public void displayCostDisplaysCostAsAnIntegerWhenCostIsAMultipleOf10() {
         foodSetUp(30.0);
-        assertEquals("£30", ((DelegatingFoodView)foodView).displayCost());
+        assertEquals("£30", ((UpdateFoodView)foodView).displayCost());
     }
 
     @Test
     public void displayCostDisplaysMoneyWithPenceOnlyWhenCostIsLessThanOnePound() {
         foodSetUp(0.30);
-        assertEquals("30p", ((DelegatingFoodView)foodView).displayCost());
+        assertEquals("30p", ((UpdateFoodView)foodView).displayCost());
     }
 
     @Test
     public void displayCostDisplaysPoundsAndPence() {
         foodSetUp(7.21);
-        assertEquals("£7.21p", ((DelegatingFoodView)foodView).displayCost());
+        assertEquals("£7.21p", ((UpdateFoodView)foodView).displayCost());
     }
 
     @Test
     public void displayCostDisplaysPoundAndPenceToTwoDecimalPlaces() {
         foodSetUp(1.56789);
-        assertEquals("£1.57p", ((DelegatingFoodView)foodView).displayCost());
+        assertEquals("£1.57p", ((UpdateFoodView)foodView).displayCost());
     }
 
 }

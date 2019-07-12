@@ -7,7 +7,7 @@ import java.util.Optional;
 import com.food.foodservice.model.Food;
 import com.food.foodservice.repository.FoodRepository;
 import com.food.foodservice.repository.InMemoryFoodRepository;
-import com.food.foodservice.view.DelegatingFoodView;
+import com.food.foodservice.view.UpdateFoodView;
 import com.food.foodservice.view.FoodView;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +89,7 @@ public class FoodServiceTest {
     @Test
     public void addFoodReturnsAFoodIdWhenAFoodItemIsAdded() throws InvalidFoodException {
         // given
-        FoodView foodView =  new DelegatingFoodView(new Food());
+        FoodView foodView =  new UpdateFoodView(new Food());
 
         // when
         String foodId = foodService.addFood(foodView);

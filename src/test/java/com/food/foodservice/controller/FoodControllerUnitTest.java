@@ -3,7 +3,7 @@ package com.food.foodservice.controller;
 import com.food.foodservice.model.Food;
 import com.food.foodservice.service.FoodService;
 import com.food.foodservice.service.InvalidFoodException;
-import com.food.foodservice.view.DelegatingFoodView;
+import com.food.foodservice.view.UpdateFoodView;
 import com.food.foodservice.view.FoodView;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class FoodControllerUnitTest {
     public void setUp() throws Exception {
         initMocks(this);
         food = new Food();
-        foodView = new DelegatingFoodView(food);
+        foodView = new UpdateFoodView(food);
         foodController = new FoodController(foodService);
     }
 

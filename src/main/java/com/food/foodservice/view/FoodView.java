@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(as = DelegatingFoodView.class)
+@JsonDeserialize(as = UpdateFoodView.class)
 public interface FoodView {
     public String getName();
 
@@ -14,6 +14,4 @@ public interface FoodView {
 
     public double getCost();
 }
-
-
 

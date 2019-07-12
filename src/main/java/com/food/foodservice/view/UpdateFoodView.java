@@ -4,14 +4,18 @@ import java.util.List;
 
 import com.food.foodservice.model.Food;
 
-public class DelegatingFoodView implements FoodView {
+public class UpdateFoodView implements FoodView {
 
     private Food food;
 
-    public DelegatingFoodView() {
+    public UpdateFoodView() {
     }
 
-    public DelegatingFoodView(Food food) {
+    public UpdateFoodView(Food food) {
+        this.food = food;
+    }
+
+    public void setFood(Food food) {
         this.food = food;
     }
 
